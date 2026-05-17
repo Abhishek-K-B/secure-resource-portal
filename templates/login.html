@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Login - Resource Portal</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <div class="container">
+        <h2>Student Resource Portal</h2>
+        <h3>Login</h3>
+        {% with messages = get_flashed_messages() %}
+    {% if messages %}
+        {% for message in messages %}
+            <div class="flash">{{ message }}</div>
+        {% endfor %}
+    {% endif %}
+{% endwith %}
+        <form method="POST">
+            <input type="text" name="username" placeholder="Enter username" required>
+            <input type="password" name="password" placeholder="Enter password" required>
+            <button type="submit">Login</button>
+        </form>
+
+        <p>New user? <a href="/register">Register here</a></p>
+    </div>
+</body>
+</html>

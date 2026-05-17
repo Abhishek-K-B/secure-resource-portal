@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Dashboard - Resource Portal</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <div class="container large">
+        <h2>Student Dashboard</h2>
+        {% with messages = get_flashed_messages() %}
+    {% if messages %}
+        {% for message in messages %}
+            <div class="flash">{{ message }}</div>
+        {% endfor %}
+    {% endif %}
+{% endwith %}
+        <p>Upload and access study resources securely.</p>
+
+        <form method="POST" enctype="multipart/form-data">
+            <input type="text" name="title" placeholder="Resource title" required>
+            <input type="file" name="file" required>
+            <button type="submit">Upload Resource</button>
+        </form>
+
+        <h3>Available Resources</h3>
+
+        <table>
+            <tr>
+                <th>ID</th>
+                <th>Title</th>
+                <th>File</th>
+                <th>Uploaded By</th>
+                <th>Action</th>
+            </tr>
+
+            {% for resource in resources %}
+            <tr>
+                <td>{{ resource[0] }}</td>
+                <td>{{ resource[1] }}</td>
+                <td>{{ resource[2] }}</td>
+                <td>{{ resource[3] }}</td>
+                <td><a href="/download/{{ resource[2] }}">Download</a></td>
+            </tr>
+            {% endfor %}
+        </table>
+
+        <br>
+        <a href="/logout">Logout</a>
+    </div>
+</body>
+</html>
