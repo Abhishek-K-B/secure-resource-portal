@@ -1,4 +1,5 @@
 from flask import Flask, render_template, request, redirect, session, flash, send_from_directory
+from markupsafe import escape
 import sqlite3
 import os
 from datetime import datetime
@@ -75,7 +76,7 @@ def home():
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'POST':
-        username = request.form['username'].strip()
+        username = escape(request.form['username'].strip())
         password = generate_password_hash(request.form['password'])
 
         try:
@@ -100,7 +101,7 @@ def register():
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
-        username = request.form['username'].strip()
+       username = escape(request.form['username'].strip())
         password = request.form['password']
 
         conn = sqlite3.connect('database.db')
@@ -129,9 +130,9 @@ def dashboard():
         return redirect('/login')
 
     if request.method == 'POST':
-        title = request.form['title']
-        subject = request.form['subject']
-        description = request.form['description']
+        title = escape(request.form['title'])
+subject = escape(request.form['subject'])
+description = escape(request.form['description'])
         file = request.files['file']
 
         if file and allowed_file(file.filename):
