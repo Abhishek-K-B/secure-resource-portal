@@ -5,8 +5,15 @@ import os
 from datetime import datetime
 from werkzeug.utils import secure_filename
 from werkzeug.security import generate_password_hash, check_password_hash
+from flask_limiter import Limiter
+from flask_limiter.util import get_remote_address
 
 app = Flask(__name__)
+limiter = Limiter(
+    get_remote_address,
+    app=app,
+    default_limits=["200 per day", "50 per hour"]
+)
 app.secret_key = "secureprojectkey"
 
 UPLOAD_FOLDER = 'uploads'
@@ -99,6 +106,7 @@ def register():
 
 
 @app.route('/login', methods=['GET', 'POST'])
+@limiter.limit("5 per minute")
 def login():
     if request.method == 'POST':
        username = escape(request.form['username'].strip())
