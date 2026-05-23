@@ -110,7 +110,7 @@ def register():
 def login():
     if request.method == 'POST':
        username = escape(request.form['username'].strip())
-        password = request.form['password']
+       password = request.form['password']
 
         conn = sqlite3.connect('database.db')
         cur = conn.cursor()
@@ -126,7 +126,7 @@ def login():
                 return redirect('/admin')
 
             return redirect('/dashboard')
-        print(f"Failed login attempt for user: {username}")
+        print("Failed login attempt for user: {username}")
         flash('Invalid username or password.')
 
     return render_template('login.html')
