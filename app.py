@@ -109,12 +109,12 @@ def register():
 @limiter.limit("5 per minute")
 def login():
     if request.method == 'POST':
-       username = escape(request.form['username'].strip())
-       password = request.form['password']
+        username = escape(request.form['username'].strip())
+        password = request.form['password']
 
         conn = sqlite3.connect('database.db')
         cur = conn.cursor()
-        cur.execute("SELECT * FROM users WHERE username=?", (username,))
+        cur.execute("SELECT * FROM users WHERE username=?", (str(username),))
         user = cur.fetchone()
         conn.close()
 
@@ -126,7 +126,8 @@ def login():
                 return redirect('/admin')
 
             return redirect('/dashboard')
-        print("Failed login attempt for user: {username}")
+
+        print(f"Failed login attempt for user: {username}")
         flash('Invalid username or password.')
 
     return render_template('login.html')
@@ -139,8 +140,8 @@ def dashboard():
 
     if request.method == 'POST':
         title = escape(request.form['title'])
-subject = escape(request.form['subject'])
-description = escape(request.form['description'])
+        subject = escape(request.form['subject'])
+        description = escape(request.form['description'])
         file = request.files['file']
 
         if file and allowed_file(file.filename):
@@ -153,7 +154,7 @@ description = escape(request.form['description'])
             cur = conn.cursor()
             cur.execute(
                 "INSERT INTO resources(title,subject,description,filename,uploaded_by,upload_date) VALUES(?,?,?,?,?,?)",
-                (title, subject, description, filename, session['username'], upload_date)
+                (str(title), str(subject), str(description), filename, session['username'], upload_date)
             )
             conn.commit()
             conn.close()
@@ -253,9 +254,3 @@ def logout():
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)
 
-    @app.after_request
-def security_headers(response):
-    response.headers['X-Frame-Options'] = 'SAMEORIGIN'
-    response.headers['X-Content-Type-Options'] = 'nosniff'
-    response.headers['Strict-Transport-Security'] = 'max-age=31536000'
-    return response
