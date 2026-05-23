@@ -126,7 +126,7 @@ def login():
                 return redirect('/admin')
 
             return redirect('/dashboard')
-
+        print(f"Failed login attempt for user: {username}")
         flash('Invalid username or password.')
 
     return render_template('login.html')
